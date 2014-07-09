@@ -2,6 +2,7 @@ package cn.memedai.gateway.domain.investment;
 
 import cn.memedai.gateway.domain.auth.User;
 import cn.memedai.gateway.domain.bid.Bid;
+import cn.memedai.gateway.domain.setting.PreferenceSetting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,8 @@ public class Investor extends User {
     private Integer gender;
     private String name;
     private List<Bid> bidHistories = new ArrayList<>();
+    private PreferenceSetting preferenceSetting;
+
 
     public Integer getGender() {
         return gender;
@@ -36,6 +39,14 @@ public class Investor extends User {
 
     public void setBidHistories(List<Bid> bidHistories) {
         this.bidHistories = bidHistories;
+    }
+
+    public PreferenceSetting getPreferenceSetting() {
+        return preferenceSetting;
+    }
+
+    public void setPreferenceSetting(PreferenceSetting preferenceSetting) {
+        this.preferenceSetting = preferenceSetting;
     }
 
     public void bid(Bid bid) {

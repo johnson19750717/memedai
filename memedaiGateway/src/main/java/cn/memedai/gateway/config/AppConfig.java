@@ -1,5 +1,6 @@
 package cn.memedai.gateway.config;
 
+import cn.memedai.gateway.domain.bid.SimpleBid;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,12 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.jredis.JredisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -29,9 +36,10 @@ import java.beans.PropertyVetoException;
 @EnableJpaRepositories("cn.memedai.gateway.repository")
 @EnableScheduling
 @EnableAspectJAutoProxy
+@EnableCaching
 public class AppConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(AppConfig.class);
-    @Autowired
+    @Inject
     private Environment env;
 
     @Bean
@@ -76,4 +84,26 @@ public class AppConfig {
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
+
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        JedisConnectionFactory connectionFactory = new JedisConnectionFactory();
+        connectionFactory.setHostName(env.getProperty("redis.host"));
+        connectionFactory.setPort(Integer.valueOf(env.getProperty("redis.port")));
+        connectionFactory.setUsePool(true);
+        return connectionFactory;
+    }
+
+    @Bean
+    public StringRedisTemplate redisTemplate() {
+        StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
+        template.setEnableTransactionSupport(true);
+        return template;
+    }
+
+    @Bean
+    public RedisCacheManager cacheManager() {
+        return new RedisCacheManager(redisTemplate());
+    }
+
 }
