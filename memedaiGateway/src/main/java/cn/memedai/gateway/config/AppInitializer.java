@@ -4,6 +4,7 @@ import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 
@@ -25,6 +26,7 @@ public class AppInitializer implements WebApplicationInitializer {
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/*");
         configureSpringSecurity(servletContext, context);
+        configureEncodingFilter(servletContext);
     }
 
     private AnnotationConfigWebApplicationContext getContext() {
@@ -37,5 +39,12 @@ public class AppInitializer implements WebApplicationInitializer {
         FilterRegistration.Dynamic springSecurity = servletContext.addFilter("springSecurityFilterChain",
                 new DelegatingFilterProxy("springSecurityFilterChain", rootContext));
         springSecurity.addMappingForUrlPatterns(null, true, "/*");
+    }
+
+    private void configureEncodingFilter(ServletContext servletContext) {
+        FilterRegistration.Dynamic fr = servletContext.addFilter("encodingFilter", new CharacterEncodingFilter());
+        fr.setInitParameter("encoding", "UTF-8");
+        fr.setInitParameter("forceEncoding", "true");
+        fr.addMappingForUrlPatterns(null, true, "/*");
     }
 }
