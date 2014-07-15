@@ -74,7 +74,7 @@ public class Bid implements Serializable {
     }
 
     public Double getProgress() {
-        return (shoppingCartAmount + investedAmount) / metaData.amount();
+        return investedAmount / metaData.amount();
     }
 
     public void setProgress(Double progress) {

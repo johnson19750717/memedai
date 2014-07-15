@@ -16,7 +16,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration
 @EnableWebMvc
 @PropertySource("classpath:config.properties")
-@ComponentScan("cn.memedai.gateway")
+@ComponentScan("cn.memedai.gateway.web")
 public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public ViewResolver viewResolver() {

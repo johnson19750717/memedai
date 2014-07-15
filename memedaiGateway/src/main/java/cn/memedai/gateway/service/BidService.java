@@ -1,6 +1,9 @@
 package cn.memedai.gateway.service;
 
 import cn.memedai.gateway.domain.bid.Bid;
+import cn.memedai.gateway.domain.investment.Investor;
+import cn.memedai.gateway.domain.shoppingcart.Investment;
+import cn.memedai.gateway.domain.shoppingcart.Order;
 
 import java.util.List;
 
@@ -10,10 +13,18 @@ import java.util.List;
 public interface BidService {
     public List<Bid> getBids();
 
-    public Bid createBid(Bid bid);
+    public Bid publish(Bid bid);
 
-    public boolean invisibleBid(Long bid);
+    public boolean invisible(Long bid);
 
-    public boolean visibleBid(Long bidId);
+    public boolean visible(Long bidId);
+
+    public List<Bid> getBidHistories(Investor investor);
+
+    public List<Investment> getInvestmentBy(Bid bid);
+
+    public void fail(Bid bid);
+
+    public void win(Bid bid);
 
 }
