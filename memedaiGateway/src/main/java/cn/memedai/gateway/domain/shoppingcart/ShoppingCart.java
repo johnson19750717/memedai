@@ -40,17 +40,21 @@ public class ShoppingCart {
     public void addInvestment(Investment investment) {
         if (!investments.contains(investment)) {
             investments.add(investment);
+//            investment.getBid().setShoppingCartAmount(investment.getBid().getShoppingCartAmount() - investment.getAmountOfInvestment());
         }
     }
 
     public void removeInvestment(Investment investment) {
         if (investments.contains(investment)) {
             investments.remove(investment);
+//            investment.getBid().setShoppingCartAmount(investment.getBid().getShoppingCartAmount() + investment.getAmountOfInvestment());
         }
     }
 
     public void clear() {
-        investments.clear();
+        for (Investment investment : investments) {
+            removeInvestment(investment);
+        }
     }
 
     public Order createOrder() {

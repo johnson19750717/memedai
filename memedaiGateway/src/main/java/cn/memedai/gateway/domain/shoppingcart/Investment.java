@@ -1,33 +1,31 @@
 package cn.memedai.gateway.domain.shoppingcart;
 
-import cn.memedai.gateway.domain.bid.Bid;
-import cn.memedai.gateway.domain.investment.Investor;
-
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by dell on 14-7-8.
  */
-public class Investment {
-    private Investor investor;
-    private Bid bid;
+public class Investment implements Serializable {
+    private String investor;
+    private String bidNo;
     private Double amountOfInvestment;
     private Date dateOfInvestment;
 
-    public Investor getInvestor() {
+    public String getInvestor() {
         return investor;
     }
 
-    public void setInvestor(Investor investor) {
+    public void setInvestor(String investor) {
         this.investor = investor;
     }
 
-    public Bid getBid() {
-        return bid;
+    public String getBidNo() {
+        return bidNo;
     }
 
-    public void setBid(Bid bid) {
-        this.bid = bid;
+    public void setBidNo(String bidNo) {
+        this.bidNo = bidNo;
     }
 
     public Double getAmountOfInvestment() {

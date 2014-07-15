@@ -1,10 +1,8 @@
 package cn.memedai.gateway.config;
 
-import cn.memedai.gateway.domain.bid.SimpleBid;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -14,9 +12,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.connection.jredis.JredisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -31,7 +28,7 @@ import java.beans.PropertyVetoException;
  * Created by dell on 14-6-4.
  */
 @Configuration
-@ComponentScan(basePackages = {"cn.memedai.gateway.service"}, excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = {"cn.memedai.gateway.web"}))
+@ComponentScan(basePackages = {"cn.memedai.gateway.repository"}, includeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = {"cn.memedai.gateway.web.*"}))
 @PropertySource(value = {"classpath:config.properties"})
 @EnableJpaRepositories("cn.memedai.gateway.repository")
 @EnableScheduling
@@ -94,16 +91,18 @@ public class AppConfig {
         return connectionFactory;
     }
 
-    @Bean
-    public StringRedisTemplate redisTemplate() {
-        StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
-        template.setEnableTransactionSupport(true);
-        return template;
+    @Bean(name = "redisTemplate")
+    public <String, V> RedisTemplate<String, V> redisTemplate() {
+        RedisTemplate<String, V> redisTemplate = new RedisTemplate<String, V>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setEnableTransactionSupport(true);
+        return redisTemplate;
     }
+
 
     @Bean
     public RedisCacheManager cacheManager() {
         return new RedisCacheManager(redisTemplate());
     }
-
 }
