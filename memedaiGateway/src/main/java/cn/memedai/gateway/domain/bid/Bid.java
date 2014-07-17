@@ -1,5 +1,7 @@
 package cn.memedai.gateway.domain.bid;
 
+import org.apache.commons.lang.math.NumberUtils;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -16,11 +18,11 @@ public class Bid implements Serializable {
     @Embedded
     private BidMetaData metaData;
     @Column(name = "AVL_AMT")
-    private Double availableAmount;
+    private Double availableAmount = NumberUtils.DOUBLE_ZERO;
     @Column(name = "INVESTED_AMT")
     private Double investedAmount;
     @Column(name = "SHOPPING_CART_AMT")
-    private Double shoppingCartAmount;
+    private Double shoppingCartAmount = NumberUtils.DOUBLE_ZERO;
     @Column(name = "INVESTED_COUNT")
     private Integer investedCount;
     @Column(name = "PROGRESS")

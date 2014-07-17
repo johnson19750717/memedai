@@ -1,5 +1,7 @@
 package cn.memedai.gateway.domain.bid;
 
+import org.apache.commons.lang.math.NumberUtils;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
@@ -25,7 +27,7 @@ public class UnderlyingAsset {
 
     private Integer term;
     @Column(name = "AMOUNT")
-    private Double amount;
+    private Double amount = NumberUtils.DOUBLE_ZERO;
     @Column(name = "MAX_TERM")
     private Integer maxTerm;
     @Column(name = "EACH_PAYMENT")

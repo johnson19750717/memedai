@@ -27,4 +27,5 @@ public interface BidService {
 
     public void win(Bid bid);
 
+    public Bid getBid(Long bidId);
 }

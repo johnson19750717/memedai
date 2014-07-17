@@ -3,9 +3,11 @@ package cn.memedai.gateway.service;
 import cn.memedai.gateway.domain.bid.Bid;
 import cn.memedai.gateway.domain.investment.Investor;
 import cn.memedai.gateway.domain.shoppingcart.Investment;
+import cn.memedai.gateway.repository.BidRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -14,9 +16,12 @@ import java.util.List;
 @Service(value = "bidService")
 @Transactional
 public class BidServiceImpl implements BidService {
+    @Inject
+    private BidRepository bidRepository;
+
     @Override
     public List<Bid> getBids() {
-        return null;
+        return bidRepository.findAll();
     }
 
     @Override
@@ -52,5 +57,10 @@ public class BidServiceImpl implements BidService {
     @Override
     public void win(Bid bid) {
 
+    }
+
+    @Override
+    public Bid getBid(Long bidId) {
+        return bidRepository.findOne(bidId);
     }
 }
