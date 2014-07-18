@@ -13,5 +13,4 @@ public interface PaymentService {
     public void getPaymentHistories(Investor investor);
 
     public void getPaymentHistories(Bid bid);
-
 }

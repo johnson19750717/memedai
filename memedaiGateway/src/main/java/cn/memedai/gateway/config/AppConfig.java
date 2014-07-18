@@ -1,19 +1,23 @@
 package cn.memedai.gateway.config;
 
 import cn.memedai.gateway.domain.shoppingcart.Investment;
+import cn.memedai.gateway.domain.shoppingcart.ScheduledShoppingCartListener;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
-import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.Topic;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -24,7 +28,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.client.RestTemplate;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
 import java.nio.charset.Charset;
@@ -133,5 +136,19 @@ public class AppConfig {
     @Bean
     public RedisCacheManager cacheManager() {
         return new RedisCacheManager(redisTemplate());
+    }
+
+    @Bean
+    public MessageListenerAdapter messageListenerAdapter() {
+        return new MessageListenerAdapter(new ScheduledShoppingCartListener());
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisMessageListenerContainer() {
+        final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(redisConnectionFactory());
+        Topic topic = new ChannelTopic("__keyevent@0__:expired");
+        container.addMessageListener(messageListenerAdapter(), topic);
+        return container;
     }
 }

@@ -10,14 +10,16 @@ import java.util.List;
  * Created by Johnson on 7/10/14.
  */
 public interface ShoppingCartService {
-    public void add(Investment investment);
+    public Investment add(Investment investment);
 
-    public void remove(Investment investment);
+    public void remove(Long investmentId);
 
-    public void update(Investment investment);
+    public void update(Long investmentId, Double newAmount);
 
-    public List<Investment> getInvestments(Investor investor);
+    public List<Investment> getInvestments(String investor);
 
     public void expire(ShoppingCart cart);
+
+    public void clean();
 
 }
